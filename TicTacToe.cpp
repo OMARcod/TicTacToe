@@ -13,16 +13,17 @@ int usedSpace[arraySize]{ 0 };
 bool CheckIfWin();
 bool CheckHorisontalWin();
 bool CheckVerticalWin();
-
+bool CheckCurvedLineWin();
+bool CheckThisRow(int beginIndex, int player, int toAdd);
 
 enum class Player
 {
-	O = 1,
-	X = 2,
+	X = 1,
+	O = 2,
 };
 //
-//int o = static_cast<int>(Player::O);
-//int x = static_cast<int>(Player::X);
+int playerO = static_cast<int>(Player::O);
+int playerX = static_cast<int>(Player::X);
 
 int main()
 {
@@ -250,36 +251,39 @@ bool CheckIfFull()
 
 bool CheckIfWin()
 {
-	
+	bool isWin = CheckHorisontalWin();
 
-	bool isWin = CheckHorisontalWin(); //---
-	if (!isWin)
+	if (!isWin) 
 	{
 		isWin = CheckVerticalWin();
+
+		if (!isWin)
+		{
+			isWin = CheckCurvedLineWin();
+		}
 	}
 	
 	return isWin;
 }
 
-
 bool CheckHorisontalWin()
 {
 	bool isWin = false;
-	int nrOfBox = 0;
+	int beginIndex = 0;
 	int row = 3;
 	for (int i = 0; i < row; i++)
 	{
-		if (usedSpace[nrOfBox] == 1 && usedSpace[nrOfBox + 1] == 1 && usedSpace[nrOfBox + 2] == 1)
+		if (CheckThisRow(beginIndex, playerX, 1))
 		{
 			isWin = true;
 			break;
 		}
-		else if (usedSpace[nrOfBox] == 2 && usedSpace[nrOfBox + 1] == 2 && usedSpace[nrOfBox + 2] == 2)
+		else if (CheckThisRow(beginIndex, playerO, 1))
 		{
 			isWin = true;
 			break;
 		}
-		nrOfBox += 3;
+		beginIndex += 3;
 	}
 	
 	return isWin;
@@ -288,26 +292,69 @@ bool CheckHorisontalWin()
 bool CheckVerticalWin()
 {
 	bool isWin = false;
-	int nrOfBox = 0;
+	int beginIndex = 0;
 	int column = 3;
 	for (int i = 0; i < column; i++)
 	{
-		if (usedSpace[nrOfBox] == 1 && usedSpace[nrOfBox + 3] == 1 && usedSpace[nrOfBox + 6] == 1)
+		if (CheckThisRow(beginIndex, playerX, 3))
 		{
 			isWin = true;
 			break;
 		}
-		else if (usedSpace[nrOfBox] == 2 && usedSpace[nrOfBox + 3] == 2 && usedSpace[nrOfBox + 6] == 2)
+		else if (CheckThisRow(beginIndex, playerO, 3))
 		{
 			isWin = true;
 			break;
 		}
-		nrOfBox += 1;
+		beginIndex += 1;
 	}
 	return isWin;
 }
 
-//bool CheckCurvedLineWin();
+bool CheckThisRow(int beginIndex, int player, int toAdd)
+{
+	if (usedSpace[beginIndex] == player && usedSpace[beginIndex + toAdd] == player && usedSpace[beginIndex + (toAdd*2)] == player)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool CheckCurvedLineWin()
+{
+	bool isWin = false;
+	int line = 2;
+	int secuondLine = 2; //box that begin in indix 2
+	int firstLine = 0; //box that begin at index 0
+	for (int i = 0; i < line; i++)
+	{
+		
+		if (CheckThisRow(firstLine, playerX, 4))
+		{
+			isWin = true;
+			break;
+		}
+		else if (CheckThisRow(firstLine, playerO, 4))
+		{
+			isWin = true;
+			break;
+		}
+	}
+	for (int i = 0; i < line; i++)
+	{
+		if (CheckThisRow(secuondLine, playerX, 2))
+		{
+			isWin = true;
+			break;
+		}
+		else if (CheckThisRow(secuondLine, playerO, 2))
+		{
+			isWin = true;
+			break;
+		}
+	}
+	return isWin;
+}
 
 //How to pass the 2d array in a function
 //how to display and change the array inside a function inside a forloop
