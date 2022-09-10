@@ -11,7 +11,7 @@ bool CheckIfFull();
 int const arraySize = 9;
 int usedSpace[arraySize]{ 0 };
 bool CheckIfWin();
-
+bool CheckHorisontalWin();
 bool CheckVerticalWin();
 
 
@@ -81,9 +81,6 @@ int main()
 		}
 		
 	}
-
-
-
 	return 0;
 }
 
@@ -255,11 +252,24 @@ bool CheckIfWin()
 {
 	
 
-	int nrOfBox = 0;
-	bool isWin = false;
-	while (nrOfBox < arraySize)
+	bool isWin = CheckHorisontalWin(); //---
+	if (!isWin)
 	{
-		if (usedSpace[nrOfBox] == 1 && usedSpace[nrOfBox + 1] == 1 &&  usedSpace[nrOfBox + 2] == 1)
+		isWin = CheckVerticalWin();
+	}
+	
+	return isWin;
+}
+
+
+bool CheckHorisontalWin()
+{
+	bool isWin = false;
+	int nrOfBox = 0;
+	int row = 3;
+	for (int i = 0; i < row; i++)
+	{
+		if (usedSpace[nrOfBox] == 1 && usedSpace[nrOfBox + 1] == 1 && usedSpace[nrOfBox + 2] == 1)
 		{
 			isWin = true;
 			break;
@@ -271,14 +281,32 @@ bool CheckIfWin()
 		}
 		nrOfBox += 3;
 	}
+	
 	return isWin;
 }
 
 bool CheckVerticalWin()
 {
-	return true;
+	bool isWin = false;
+	int nrOfBox = 0;
+	int column = 3;
+	for (int i = 0; i < column; i++)
+	{
+		if (usedSpace[nrOfBox] == 1 && usedSpace[nrOfBox + 3] == 1 && usedSpace[nrOfBox + 6] == 1)
+		{
+			isWin = true;
+			break;
+		}
+		else if (usedSpace[nrOfBox] == 2 && usedSpace[nrOfBox + 3] == 2 && usedSpace[nrOfBox + 6] == 2)
+		{
+			isWin = true;
+			break;
+		}
+		nrOfBox += 1;
+	}
+	return isWin;
 }
-//bool CheckHorisontalWin();
+
 //bool CheckCurvedLineWin();
 
 //How to pass the 2d array in a function
