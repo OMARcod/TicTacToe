@@ -4,7 +4,8 @@
 void ChangeArray(char a[][3], char letter);
 void ChangeArrayAtLocation(char a[][3], char letter, int index, int player);
 void DipslayArray(char a[][3]);
-int AskForInput();
+int AskForInputGame(std::string playerName);
+int AskForInputMenu();
 int CheckInput();
 bool CheckIndexIsUsed(int index);
 bool CheckIfFull();
@@ -15,6 +16,8 @@ bool CheckHorisontalWin();
 bool CheckVerticalWin();
 bool CheckCurvedLineWin();
 bool CheckThisRow(int beginIndex, int player, int toAdd);
+void ShowMenu();
+void ResetTheGame(char array[][3]);
 
 enum class Player
 {
@@ -33,67 +36,169 @@ int main()
 
 	//DisplayArray(array2D, 3, 3);
 
-	std::cout << "Type the the number of the box that you want to use:" << std::endl;
-
-	ChangeArray(array2D,' ');
-	DipslayArray(array2D);
 
 	bool isPlaying = true;
 	bool firstPlayer = true;
+	ShowMenu();
+	index = AskForInputMenu();
 
-	while (isPlaying)
+	std::string player1 = "";
+	std::string player2 = "";
+
+	bool GameNotExit = true;
+
+	if (index == 0)
 	{
-		index = AskForInput();
-		if (CheckIndexIsUsed(index))
+		GameNotExit = false;
+	}
+	else
+	{
+		system("cls");
+		std::cout << "First Player Name: ";
+		std::cin >> player1;
+		std::cout << "Secund Player Name: ";
+		std::cin >> player2;
+
+		system("cls");
+		ChangeArray(array2D, ' ');
+		DipslayArray(array2D);
+		std::cout << "Type the the number of the box that you want to use:" << std::endl;
+	}
+	bool wantToPlay = true;
+
+	while (GameNotExit)
+	{
+		while (wantToPlay)
 		{
-			std::cout << "this box is used! Pleas chose another box" << std::endl;
+			while (isPlaying)
+			{
+				if (firstPlayer)
+				{
+					index = AskForInputGame(player1);
+				}
+				else
+				{
+					index = AskForInputGame(player2);
+				}
+				if (CheckIndexIsUsed(index))
+				{
+					std::cout << "this box is used! Pleas chose another box" << std::endl;
+				}
+				else
+				{
+					if (firstPlayer)
+					{
+						ChangeArrayAtLocation(array2D, 'X', index, static_cast<int>(Player::X));
+						firstPlayer = false;
+					}
+					else
+					{
+						ChangeArrayAtLocation(array2D, 'O', index, static_cast<int>(Player::O));
+						firstPlayer = true;
+					}
+					DipslayArray(array2D);
+				}
+				if (CheckIfWin())
+				{
+					if (firstPlayer)
+					{
+						std::cout << player2 <<" have Won!" << std::endl;
+						isPlaying = false;
+					}
+					else
+					{
+						std::cout << player1 << " have Won!" << std::endl;
+						isPlaying = false;
+					}
+				}
+				else if (CheckIfFull())
+				{
+						std::cout << "The box is full" << std::endl;
+						isPlaying = false;
+				}
+			}
+
+			std::cout << "==========================" << std::endl;
+			std::cout << "Do you want to play again?" << std::endl;
+			std::cout << "1. Yes" << std::endl;
+			std::cout << "0. No!" << std::endl;
+			if (AskForInputMenu() == 0)
+			{
+				wantToPlay = false;
+				ResetTheGame(array2D);
+			}
+			else
+			{
+				isPlaying = true;
+				ResetTheGame(array2D);
+			}
+		}
+
+		ShowMenu();
+		index = AskForInputMenu();
+		if (index == 0)
+		{
+			GameNotExit = false;
 		}
 		else
 		{
-			if (firstPlayer)
-			{
-				ChangeArrayAtLocation(array2D, 'X', index, static_cast<int>(Player::X));
-				firstPlayer = false;
-			}
-			else
-			{
-				ChangeArrayAtLocation(array2D, 'O', index, static_cast<int>(Player::O));
-				firstPlayer = true;
-			}
+			wantToPlay = true;
+			isPlaying = true;
+			system("cls");
+			std::cout << "First Player Name: ";
+			std::cin >> player1;
+			std::cout << "Secund Player Name: ";
+			std::cin >> player2;
+
+			system("cls");
+			ChangeArray(array2D, ' ');
 			DipslayArray(array2D);
+			std::cout << "Type the the number of the box that you want to use:" << std::endl;
 		}
-		if (CheckIfWin())
-		{
-			if (firstPlayer)
-			{
-				std::cout << "The second Player (O) have Won!" << std::endl;
-				isPlaying = false;
-			}
-			else
-			{
-				std::cout << "The first Player (X) have Won!" << std::endl;
-				isPlaying = false;
-			}
-		}
-		else if (CheckIfFull())
-		{
-				std::cout << "The box is full" << std::endl;
-				isPlaying = false;
-		}
-		
 	}
+
+
+	
+
 	return 0;
 }
 
-int AskForInput()
+
+void ResetTheGame(char array[][3])
+{
+	for (int i = 0; i < arraySize; i++)
+	{
+		usedSpace[i] = 0;
+	}
+	ChangeArray(array, ' ');
+	DipslayArray(array);
+}
+
+int AskForInputGame(std::string playerName)
 {
 	int index = 0;
-	std::cout << "Your Input: ";
+	std::cout << playerName <<" Input: ";
 
 	index = CheckInput();
 	while (index < 1 || index > arraySize)
 	{
 		std::cout << "Pleas Enter a number between 1 and 9 ...." << std::endl;
+		std::cout << "Your Input: ";
+		index = CheckInput();
+	}
+	return  index;
+}
+
+
+int AskForInputMenu()
+{
+	int index = 0;
+	std::cout << "Your Input: ";
+
+	index = CheckInput();
+	while (index < 0 || index > 1 )
+	{
+		std::cout << "Pleas Enter 0 or 1 ...." << std::endl;
 		std::cout << "Your Input: ";
 		index = CheckInput();
 	}
@@ -114,7 +219,11 @@ int CheckInput()
 			std::cin >> input;
 		}
 		if (!std::cin.fail())
+		{
+			std::cin.clear();
+			std::cin.ignore(10000, '\n');
 			break;
+		}
 	}
 	return input;
 }
@@ -355,6 +464,28 @@ bool CheckCurvedLineWin()
 	}
 	return isWin;
 }
+
+void ShowMenu()
+{
+	system("cls");
+	std::cout << "================================" << std::endl;
+	std::cout << "Welcome to the Tic Tac Toe Game!" << std::endl;
+	std::cout << "================================" << std::endl;
+	std::cout << "1. Play New Game" << std::endl;
+	std::cout << "0. Exit" << std::endl;
+}
+
+//
+// Menu
+// Display wich player turn
+// Ask for player1 name and player2 name
+// Display winner
+// Ask if Want to playe again y/n  0/1
+// 
+// extra
+// show score
+// option to start new game or play the same 
+//
 
 //How to pass the 2d array in a function
 //how to display and change the array inside a function inside a forloop
