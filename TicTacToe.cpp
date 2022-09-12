@@ -1,4 +1,9 @@
 #include <iostream>
+#include<random>
+
+std::random_device seed;
+std::mt19937 rndEngine(seed());
+
 
 void ChangeArray(char a[][3], char letter);
 void ChangeArrayAtLocation(char a[][3], char letter, int index, int player);
@@ -8,8 +13,6 @@ int AskForInputMenu();
 int CheckInput();
 bool CheckIndexIsUsed(int index);
 bool CheckIfFull();
-int const arraySize = 9;
-int usedSpace[arraySize]{ 0 };
 bool CheckIfWin();
 bool CheckHorisontalWin();
 bool CheckVerticalWin();
@@ -17,6 +20,14 @@ bool CheckCurvedLineWin();
 bool CheckThisRow(int beginIndex, int player, int toAdd);
 void ShowMenu();
 void ResetTheGame(char array[][3]);
+int RandomIndex();
+int EasyEnemi();
+int RandomNumber(int aMin, int aMax);
+int RandomIndex();
+
+
+int const arraySize = 9;
+int usedSpace[arraySize]{ 0 };
 
 enum class Player
 {
@@ -52,8 +63,7 @@ int main()
 		system("cls");
 		std::cout << "First Player Name: ";
 		std::cin >> player1;
-		std::cout << "Secund Player Name: ";
-		std::cin >> player2;
+
 
 		system("cls");
 		ChangeArray(array2D, ' ');
@@ -74,11 +84,11 @@ int main()
 				}
 				else
 				{
-					index = AskForInputGame(player2);
+					index = RandomIndex();
 				}
 				if (CheckIndexIsUsed(index))
 				{
-					std::cout << "this box is used! Pleas chose another box" << std::endl;
+					std::cout << index <<  ": box is used! Pleas chose another box" << std::endl;
 				}
 				else
 				{
@@ -98,12 +108,12 @@ int main()
 				{
 					if (firstPlayer)
 					{
-						std::cout << player2 <<" have Won!" << std::endl;
+						std::cout << "the comp have Won!" << std::endl;
 						isPlaying = false;
 					}
 					else
 					{
-						std::cout << player1 << " have Won!" << std::endl;
+						std::cout << player2 <<" You Won!" << std::endl;
 						isPlaying = false;
 					}
 				}
@@ -183,6 +193,47 @@ int AskForInputGame(std::string playerName)
 		index = CheckInput();
 	}
 	return  index;
+}
+
+int EasyEnemi()
+{
+	int index = 0;
+
+	index = RandomIndex();
+	while (index < 1 || index > arraySize)
+	{
+		std::cout << "Pleas Enter a number between 1 and 9 ...." << std::endl;
+		std::cout << "Your Input: ";
+		index = RandomIndex();
+	}
+	return  index;
+}
+
+int RandomIndex()
+{
+	
+	int lastIndex = arraySize -1;
+	int index = RandomNumber(1, lastIndex);
+	bool isUsed = true;
+	while (isUsed)
+	{
+		if (usedSpace[index] > 0 && usedSpace[index] < 3)
+		{
+			index = RandomNumber(1, lastIndex);
+		}
+		else
+		{
+			return index;
+		}
+	}
+}
+
+
+int RandomNumber(int aMin, int aMax)
+{
+	std::uniform_int_distribution<int> rndDist(aMin, aMax);
+	int randomNr = rndDist(rndEngine);
+	return randomNr;
 }
 
 
