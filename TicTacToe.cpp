@@ -1,6 +1,5 @@
 #include <iostream>
 
-//void DisplayArray(char anArray[][3], int row, int column);
 void ChangeArray(char a[][3], char letter);
 void ChangeArrayAtLocation(char a[][3], char letter, int index, int player);
 void DipslayArray(char a[][3]);
@@ -24,7 +23,6 @@ enum class Player
 	X = 1,
 	O = 2,
 };
-//
 int playerO = static_cast<int>(Player::O);
 int playerX = static_cast<int>(Player::X);
 
@@ -33,8 +31,6 @@ int main()
 	const int row = 3, column = 3;
 	char array2D[3][3];
 	int index = 0;
-
-	//DisplayArray(array2D, 3, 3);
 
 
 	bool isPlaying = true;
