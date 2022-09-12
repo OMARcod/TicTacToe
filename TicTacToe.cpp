@@ -1,4 +1,8 @@
 #include <iostream>
+#include<random>
+
+std::random_device seed;
+std::mt19937 rndEngine(seed());
 
 void ChangeArray(char a[][3], char letter);
 void ChangeArrayAtLocation(char a[][3], char letter, int index, int player);
@@ -8,8 +12,6 @@ int AskForInputMenu();
 int CheckInput();
 bool CheckIndexIsUsed(int index);
 bool CheckIfFull();
-int const arraySize = 9;
-int usedSpace[arraySize]{ 0 };
 bool CheckIfWin();
 bool CheckHorisontalWin();
 bool CheckVerticalWin();
@@ -17,6 +19,16 @@ bool CheckCurvedLineWin();
 bool CheckThisRow(int beginIndex, int player, int toAdd);
 void ShowMenu();
 void ResetTheGame(char array[][3]);
+int RandomIndex();
+int EasyEnemi();
+int RandomNumber(int aMin, int aMax);
+int RandomIndex();
+int returnEmptyIndex();
+void PlayTicTacToe();
+
+
+static int const arraySize = 9;
+static int usedSpace[arraySize]{ 0 };
 
 enum class Player
 {
@@ -27,6 +39,12 @@ int playerO = static_cast<int>(Player::O);
 int playerX = static_cast<int>(Player::X);
 
 int main()
+{
+	PlayTicTacToe();
+	return 0;
+}
+
+void PlayTicTacToe()
 {
 	const int row = 3, column = 3;
 	char array2D[3][3];
@@ -52,8 +70,7 @@ int main()
 		system("cls");
 		std::cout << "First Player Name: ";
 		std::cin >> player1;
-		std::cout << "Secund Player Name: ";
-		std::cin >> player2;
+
 
 		system("cls");
 		ChangeArray(array2D, ' ');
@@ -74,11 +91,11 @@ int main()
 				}
 				else
 				{
-					index = AskForInputGame(player2);
+					index = returnEmptyIndex();
 				}
 				if (CheckIndexIsUsed(index))
 				{
-					std::cout << "this box is used! Pleas chose another box" << std::endl;
+					std::cout << index << ": box is used! Pleas chose another box" << std::endl;
 				}
 				else
 				{
@@ -98,19 +115,19 @@ int main()
 				{
 					if (firstPlayer)
 					{
-						std::cout << player2 <<" have Won!" << std::endl;
+						std::cout << "the comp have Won!" << std::endl;
 						isPlaying = false;
 					}
 					else
 					{
-						std::cout << player1 << " have Won!" << std::endl;
+						std::cout << player2 << " You Won!" << std::endl;
 						isPlaying = false;
 					}
 				}
 				else if (CheckIfFull())
 				{
-						std::cout << "The box is full" << std::endl;
-						isPlaying = false;
+					std::cout << "The box is full" << std::endl;
+					isPlaying = false;
 				}
 			}
 
@@ -154,11 +171,8 @@ int main()
 	}
 
 
-	
 
-	return 0;
 }
-
 
 void ResetTheGame(char array[][3])
 {
@@ -185,6 +199,85 @@ int AskForInputGame(std::string playerName)
 	return  index;
 }
 
+int EasyEnemi()
+{
+	int index = 0;
+
+	index = RandomIndex();
+	while (index < 1 || index > arraySize)
+	{
+		std::cout << "Pleas Enter a number between 1 and 9 ...." << std::endl;
+		std::cout << "Your Input: ";
+		index = RandomIndex();
+	}
+	return  index;
+}
+
+int RandomIndex()
+{
+	
+	int lastIndex = arraySize -1;
+	int index = RandomNumber(1, lastIndex);
+	bool isUsed = true;
+	while (isUsed)
+	{
+		if (usedSpace[index] > 0 && usedSpace[index] < 3)
+		{
+			index = RandomNumber(1, lastIndex);
+		}
+		else
+		{
+			return index;
+		}
+	}
+}
+
+int RandomNumber(int aMin, int aMax)
+{
+	
+	std::uniform_int_distribution<int> rndDist(aMin, aMax);
+	int randomNr = rndDist(rndEngine);
+	return randomNr;
+}
+
+int returnEmptyIndex()
+{
+	int RandomLoop = RandomNumber(0, 10);
+	
+	
+	int random = 5;
+
+	for (int i = 0; i < 5; i++)
+	{
+		if (!(CheckIndexIsUsed(random)))
+		{
+			return random;
+		}
+		random = RandomNumber(1, 9);
+	}
+
+	if (RandomLoop > 5)
+	{
+		for (int i = 1; i < arraySize + 1; i++)
+		{
+			if (!(CheckIndexIsUsed(i)))
+			{
+				return i;
+			}
+		}
+	}
+	else
+	{
+		for (int i = arraySize; i > 0; i--)
+		{
+			if (!(CheckIndexIsUsed(i)))
+			{
+				return i;
+			}
+		}
+	}
+	
+}
 
 int AskForInputMenu()
 {
@@ -331,8 +424,6 @@ void ChangeArrayAtLocation(char a[][3], char letter, int index, int player)
 		break;
 	}
 
-
-
 	a[row][column] = letter;
 }
 
@@ -471,18 +562,7 @@ void ShowMenu()
 	std::cout << "0. Exit" << std::endl;
 }
 
-//
-// Menu
-// Display wich player turn
-// Ask for player1 name and player2 name
-// Display winner
-// Ask if Want to playe again y/n  0/1
-// 
 // extra
-// show score
+// show score'
+// 
 // option to start new game or play the same 
-//
-
-//How to pass the 2d array in a function
-//how to display and change the array inside a function inside a forloop
-
