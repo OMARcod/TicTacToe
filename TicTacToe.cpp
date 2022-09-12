@@ -1,9 +1,9 @@
 #include <iostream>
 #include<random>
 
+
 std::random_device seed;
 std::mt19937 rndEngine(seed());
-
 
 void ChangeArray(char a[][3], char letter);
 void ChangeArrayAtLocation(char a[][3], char letter, int index, int player);
@@ -24,6 +24,7 @@ int RandomIndex();
 int EasyEnemi();
 int RandomNumber(int aMin, int aMax);
 int RandomIndex();
+int returnEmptyIndex();
 
 
 int const arraySize = 9;
@@ -84,7 +85,7 @@ int main()
 				}
 				else
 				{
-					index = RandomIndex();
+					index = returnEmptyIndex();
 				}
 				if (CheckIndexIsUsed(index))
 				{
@@ -169,7 +170,6 @@ int main()
 	return 0;
 }
 
-
 void ResetTheGame(char array[][3])
 {
 	for (int i = 0; i < arraySize; i++)
@@ -228,14 +228,52 @@ int RandomIndex()
 	}
 }
 
-
 int RandomNumber(int aMin, int aMax)
 {
+	
 	std::uniform_int_distribution<int> rndDist(aMin, aMax);
 	int randomNr = rndDist(rndEngine);
 	return randomNr;
 }
 
+int returnEmptyIndex()
+{
+	int RandomLoop = RandomNumber(0, 10);
+	
+	
+	int random = 5;
+
+	for (int i = 0; i < 5; i++)
+	{
+		if (!(CheckIndexIsUsed(random)))
+		{
+			return random;
+		}
+		random = RandomNumber(1, 9);
+	}
+
+	if (RandomLoop > 5)
+	{
+		for (int i = 1; i < arraySize + 1; i++)
+		{
+			if (!(CheckIndexIsUsed(i)))
+			{
+				return i;
+			}
+		}
+	}
+	else
+	{
+		for (int i = arraySize; i > 0; i--)
+		{
+			if (!(CheckIndexIsUsed(i)))
+			{
+				return i;
+			}
+		}
+	}
+	
+}
 
 int AskForInputMenu()
 {
@@ -381,8 +419,6 @@ void ChangeArrayAtLocation(char a[][3], char letter, int index, int player)
 	default:
 		break;
 	}
-
-
 
 	a[row][column] = letter;
 }
