@@ -563,5 +563,6 @@ void ShowMenu()
 }
 
 // extra
-// show score
+// show score'
+// 
 // option to start new game or play the same 
