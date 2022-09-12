@@ -1,7 +1,6 @@
 #include <iostream>
 #include<random>
 
-
 std::random_device seed;
 std::mt19937 rndEngine(seed());
 
@@ -25,10 +24,11 @@ int EasyEnemi();
 int RandomNumber(int aMin, int aMax);
 int RandomIndex();
 int returnEmptyIndex();
+void PlayTicTacToe();
 
 
-int const arraySize = 9;
-int usedSpace[arraySize]{ 0 };
+static int const arraySize = 9;
+static int usedSpace[arraySize]{ 0 };
 
 enum class Player
 {
@@ -39,6 +39,12 @@ int playerO = static_cast<int>(Player::O);
 int playerX = static_cast<int>(Player::X);
 
 int main()
+{
+	PlayTicTacToe();
+	return 0;
+}
+
+void PlayTicTacToe()
 {
 	const int row = 3, column = 3;
 	char array2D[3][3];
@@ -89,7 +95,7 @@ int main()
 				}
 				if (CheckIndexIsUsed(index))
 				{
-					std::cout << index <<  ": box is used! Pleas chose another box" << std::endl;
+					std::cout << index << ": box is used! Pleas chose another box" << std::endl;
 				}
 				else
 				{
@@ -114,14 +120,14 @@ int main()
 					}
 					else
 					{
-						std::cout << player2 <<" You Won!" << std::endl;
+						std::cout << player2 << " You Won!" << std::endl;
 						isPlaying = false;
 					}
 				}
 				else if (CheckIfFull())
 				{
-						std::cout << "The box is full" << std::endl;
-						isPlaying = false;
+					std::cout << "The box is full" << std::endl;
+					isPlaying = false;
 				}
 			}
 
@@ -165,9 +171,7 @@ int main()
 	}
 
 
-	
 
-	return 0;
 }
 
 void ResetTheGame(char array[][3])
@@ -558,18 +562,6 @@ void ShowMenu()
 	std::cout << "0. Exit" << std::endl;
 }
 
-//
-// Menu
-// Display wich player turn
-// Ask for player1 name and player2 name
-// Display winner
-// Ask if Want to playe again y/n  0/1
-// 
 // extra
 // show score
 // option to start new game or play the same 
-//
-
-//How to pass the 2d array in a function
-//how to display and change the array inside a function inside a forloop
-
